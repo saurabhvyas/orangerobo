@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+
+<head>
+
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+crossorigin="anonymous"  ></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+
+<script>
+
+var socket = io('http://192.168.1.221:5000');
+
+//var sock = new SockJS('http://localhost/echo');
+
+
+
+  socket.on('connect', function(){
+console.log('connected');
+	
+	
+
+  
+  });
+  
+ 
+  
+  socket.on('event', function(data){});
+  socket.on('disconnect', function(){});
+
+
+var current_key = 'h';
+
+	$(document).keydown(function(e)  {
+	
+	
+	//var socket_test = socket;
+//	console.log(socket_test);
+
+	
+	//console.log('key press');
+    switch(e.which) {
+    
+         
+	
+    
+        case 37: // left
+        
+        socket.emit("test","l");
+   
+//console.log('wtf');
+
+//	console.log('current_key is' + current_key);
+	
+       
+     /*  if (current_key === 'l' ) {
+       
+      //  console.log('left');
+       
+       }
+       
+       else {
+       
+       console.log('left');
+       
+       
+   current_key = 'l' ;
+   
+       
+       }
+*/
+        break;
+
+        case 38: // up
+   //     redHandler();
+   socket.emit("test","f");
+
+console.log('f');
+
+        break;
+
+        case 39: // right
+//        rightHandler();
+
+socket.emit("test","r");
+
+
+        break;
+
+         case 40: // down
+ 	// greenHandler();
+ 	
+ 	socket.emit("test","b");
+console.log('back');
+
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
+
+$(document).keyup(function(e) {
+    switch(e.which) {
+        case 37: // left
+     //   blueHandler();
+     
+     socket.emit("test","s");
+
+
+        break;
+
+        case 38: // up
+    //    blueHandler();
+    socket.emit("test","s");
+
+        break;
+
+        case 39: // right
+//         blueHandler();
+
+socket.emit("test","s");
+
+
+        break;
+
+         case 40: // down
+ 	// blueHandler();
+ 	
+ 	socket.emit("test","s");
+
+
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
+
+
+
+test = function() {
+
+// console.log(' mouse hold event ');
+ } 
+
+
+
+ rightHandler = function() {
+$.ajax({
+  type: "POST",
+  url: "/robot",
+data: JSON.stringify( {
+
+      color:'r'
+  },null,'\t') ,
+contentType: 'application/json;charset=UTF-8',
+  success:function() {
+//console.log('success');
+ //alert("success"); 
+}
+ 
+}).fail(function() {
+
+console.log('fail');
+alert("error");
+
+});
+
+} 
+
+ leftHandler = function(socket) {
+ 
+
+
+ 
+$.ajax({
+  type: "POST",
+  url: "/robot",
+data: JSON.stringify( {
+
+      color:'l'
+  },null,'\t') ,
+contentType: 'application/json;charset=UTF-8',
+  success:function() {
+//console.log('success');
+ //alert("success"); 
+}
+ 
+}).fail(function() {
+
+//console.log('fail');
+alert("error");
+
+});
+
+} 
+
+ redHandler = function() {
+$.ajax({
+  type: "POST",
+  url: "/robot",
+data: JSON.stringify( {
+
+      color:'f'
+  },null,'\t') ,
+contentType: 'application/json;charset=UTF-8',
+  success:function() {
+//console.log('success');
+ //alert("success"); 
+}
+ 
+}).fail(function() {
+
+console.log('fail');
+alert("error");
+
+});
+
+} 
+
+ greenHandler = function() {
+$.ajax({
+  type: "POST",
+  url: "/robot",
+data: JSON.stringify( {
+
+      color:'b'
+  },null,'\t') ,
+contentType: 'application/json;charset=UTF-8',
+  success:function() {
+//console.log('success');
+// alert("success");
+ }
+ 
+}).fail(function() {
+
+console.log('fail');
+alert("error");
+
+});
+
+} 
+
+ blueHandler = function() {
+$.ajax({
+  type: "POST",
+  url: "/robot",
+data: JSON.stringify( {
+
+      color:'s'
+  },null,'\t') ,
+contentType: 'application/json;charset=UTF-8',
+  success:function() {
+console.log('success');
+// alert("success"); 
+}
+ 
+}).fail(function() {
+
+console.log('fail');
+alert("error");
+
+});
+
+} 
+
+</script>
+
+<style>
+
+    body,htm,title {
+        padding,margin : 0;
+        border:0;
+
+    }
+
+#red {
+left:0%;
+
+    width:30%;
+    display:inline-block;
+   
+    height:200px;
+    background:red;
+    color:white;
+    margin:0;
+
+
+
+}
+
+#left {
+left:0%;
+
+    width:30%;
+    display:inline-block;
+   
+    height:200px;
+    background:pink;
+    color:white;
+    margin:0;
+
+
+
+}
+
+#right {
+left:0%;
+
+    width:30%;
+    display:inline-block;
+   
+    height:200px;
+    background:orange;
+    color:white;
+    margin:0;
+
+
+
+}
+
+
+#green {
+    left:33%;
+
+    width:33%;
+    display:inline-block;
+   
+    height:200px;
+    background:green;
+    color:white;
+  margin:0;
+}
+
+
+#blue {
+   left:66%;
+
+    width:33%;
+    display:inline-block;
+    
+    height:200px;
+    background:blue;
+    color:white;
+margin:0;
+}
+
+h1{
+    font-size:4em;
+    text-align:center;
+
+}
+
+input {
+    width:100%;
+    background-color:inherit;
+    color:white;
+    font-size:60px;
+
+
+    height:100%;
+}
+
+</style>
+
+</head>
+<body>
+
+
+   
+<iframe src="http://192.168.1.221:8000" style="width: 90%; height: 300px"
+scrolling="no" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0">
+</iframe>
+   <br>
+ 
+    <div id="red" onmousedown="redHandler()" onmouseup="blueHandler()">
+    <input  type="button"  onclick=""  value="Forward"> 
+
+    </div>
+
+      <div id="green">
+      <input type="button"   onmousedown="greenHandler()" onmouseup="blueHandler()" value="Backward" > 
+      </div>
+      <div id="blue">
+   <input type="button"    onclick="blueHandler()" value="Stop"> 
+</div>
+
+ <div id="left">
+    <input  type="button"  onmousedown="leftHandler()" onmouseup="blueHandler()"  value="Left"> 
+
+    </div>
+
+  <div id="right">
+    <input  type="button"  onmousedown="rightHandler()" onmouseup="blueHandler()"   value="Right"> 
+
+    </div>
+</body>
+
+
+
+
+</html>
+
