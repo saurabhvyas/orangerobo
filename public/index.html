@@ -9,16 +9,59 @@
 crossorigin="anonymous"  ></script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+
 
 <script>
 
-var socket = io('http://192.168.1.221:5000');
-
+//var socket = io('https://saurabhorange.duckdns.org/robot/');
+var socket = io('/');
 //var sock = new SockJS('http://localhost/echo');
 
 
+ 
+ var f = jQuery.Event("keydown", { keyCode: 38 , which: 38 });
+var b = jQuery.Event("keydown", { keyCode: 40 , which: 40 });
+var l = jQuery.Event("keydown", { keyCode: 37 , which: 37});
+var r = jQuery.Event("keydown", { keyCode: 39 , which: 39});
 
+
+$( document ).ready(function() {
+
+  /*
+var el = document.getElementById("red");
+  el.addEventListener("touchstart", redHandler(), false);
+  el.addEventListener("touchend", blueHandler(), false);
+  
+  
+  */
+  
+  
+  $('#red').on({ 'touchstart' : function(){ redHandler();  } });
+  $('#red').on({ 'touchend' : function(){ blueHandler();  } });
+  
+  $('#green').on({ 'touchstart' : function(){ greenHandler();  } });
+  $('#green').on({ 'touchend' : function(){ blueHandler();  } });
+  
+  $('#left').on({ 'touchstart' : function(){ leftHandler();  } });
+  $('#left').on({ 'touchend' : function(){ blueHandler();  } });
+  
+  $('#right').on({ 'touchstart' : function(){ rightHandler();  } });
+  $('#right').on({ 'touchend' : function(){ blueHandler();  } });
+  
+  /*
+   var el2 = document.getElementById("green");
+  el2.addEventListener("touchstart", greenHandler(), false);
+  el2.addEventListener("touchend", blueHandler(), false);
+  
+   var el3 = document.getElementById("left");
+  el3.addEventListener("touchstart", leftHandler(), false);
+  el3.addEventListener("touchend", blueHandler(), false);
+
+
+*/
+});
   socket.on('connect', function(){
 console.log('connected');
 	
@@ -50,14 +93,14 @@ var current_key = 'h';
     
         case 37: // left
         
-        socket.emit("test","l");
+       
    
 //console.log('wtf');
 
 //	console.log('current_key is' + current_key);
 	
        
-     /*  if (current_key === 'l' ) {
+       if (current_key === 'l' ) {
        
       //  console.log('left');
        
@@ -67,26 +110,65 @@ var current_key = 'h';
        
        console.log('left');
        
+        socket.emit("test","l");
+       
        
    current_key = 'l' ;
    
        
        }
-*/
+
         break;
 
         case 38: // up
    //     redHandler();
-   socket.emit("test","f");
+  // socket.emit("test","f");
 
-console.log('f');
+	if (current_key === 'f' ) {
+       
+      //  console.log('left');
+       
+       }
+       
+       else {
+       
+       console.log('forward');
+       
+        socket.emit("test","f");
+       
+       
+   current_key = 'f' ;
+   
+       
+       }
+
+
+//console.log('f');
 
         break;
 
         case 39: // right
 //        rightHandler();
 
-socket.emit("test","r");
+//socket.emit("test","r");
+
+	if (current_key === 'r' ) {
+       
+      //  console.log('left');
+       
+       }
+       
+       else {
+       
+       console.log('right');
+       
+        socket.emit("test","r");
+       
+       
+   current_key = 'r' ;
+   
+       
+       }
 
 
         break;
@@ -94,8 +176,27 @@ socket.emit("test","r");
          case 40: // down
  	// greenHandler();
  	
- 	socket.emit("test","b");
-console.log('back');
+ 	//socket.emit("test","b");
+ 	
+ 	if (current_key === 'b' ) {
+       
+      //  console.log('left');
+       
+       }
+       
+       else {
+       
+       console.log('back');
+       
+        socket.emit("test","b");
+       
+       
+   current_key = 'b' ;
+   
+       
+       }
+
+//console.log('back');
 
         break;
 
@@ -105,12 +206,15 @@ console.log('back');
 });
 
 
+
 $(document).keyup(function(e) {
     switch(e.which) {
         case 37: // left
      //   blueHandler();
      
      socket.emit("test","s");
+     current_key="s";
+     
 
 
         break;
@@ -118,6 +222,8 @@ $(document).keyup(function(e) {
         case 38: // up
     //    blueHandler();
     socket.emit("test","s");
+    current_key="s";
+     
 
         break;
 
@@ -125,6 +231,8 @@ $(document).keyup(function(e) {
 //         blueHandler();
 
 socket.emit("test","s");
+current_key="s";
+     
 
 
         break;
@@ -133,6 +241,8 @@ socket.emit("test","s");
  	// blueHandler();
  	
  	socket.emit("test","s");
+ 	current_key="s";
+     
 
 
         break;
@@ -153,121 +263,44 @@ test = function() {
 
 
  rightHandler = function() {
-$.ajax({
-  type: "POST",
-  url: "/robot",
-data: JSON.stringify( {
 
-      color:'r'
-  },null,'\t') ,
-contentType: 'application/json;charset=UTF-8',
-  success:function() {
-//console.log('success');
- //alert("success"); 
-}
- 
-}).fail(function() {
 
-console.log('fail');
-alert("error");
-
-});
+jQuery("body").trigger( r );
 
 } 
 
- leftHandler = function(socket) {
+ leftHandler = function() {
  
 
+jQuery("body").trigger( l );
 
  
-$.ajax({
-  type: "POST",
-  url: "/robot",
-data: JSON.stringify( {
-
-      color:'l'
-  },null,'\t') ,
-contentType: 'application/json;charset=UTF-8',
-  success:function() {
-//console.log('success');
- //alert("success"); 
-}
- 
-}).fail(function() {
-
-//console.log('fail');
-alert("error");
-
-});
 
 } 
 
  redHandler = function() {
-$.ajax({
-  type: "POST",
-  url: "/robot",
-data: JSON.stringify( {
-
-      color:'f'
-  },null,'\t') ,
-contentType: 'application/json;charset=UTF-8',
-  success:function() {
-//console.log('success');
- //alert("success"); 
-}
  
-}).fail(function() {
+ console.log('test');
+ 
 
-console.log('fail');
-alert("error");
 
-});
+jQuery("body").trigger( f );
 
 } 
 
  greenHandler = function() {
-$.ajax({
-  type: "POST",
-  url: "/robot",
-data: JSON.stringify( {
-
-      color:'b'
-  },null,'\t') ,
-contentType: 'application/json;charset=UTF-8',
-  success:function() {
-//console.log('success');
-// alert("success");
- }
+jQuery("body").trigger( b );
  
-}).fail(function() {
+}
 
-console.log('fail');
-alert("error");
-
-});
-
-} 
+ 
 
  blueHandler = function() {
-$.ajax({
-  type: "POST",
-  url: "/robot",
-data: JSON.stringify( {
-
-      color:'s'
-  },null,'\t') ,
-contentType: 'application/json;charset=UTF-8',
-  success:function() {
-console.log('success');
-// alert("success"); 
-}
  
-}).fail(function() {
+  var s = jQuery.Event("keyup", { keyCode: 37 , which:37 });
 
-console.log('fail');
-alert("error");
-
-});
+ 
+jQuery("body").trigger( s )
 
 } 
 
@@ -373,9 +406,9 @@ input {
 </head>
 <body>
 
-
+<h1> Orange Robot Beta </h1>
    
-<iframe src="http://192.168.1.221:8000" style="width: 90%; height: 300px"
+<iframe src="https://www.saurabhorange.duckdns.org/robotlamp/min.php" style="width: 90%; height: 300px"
 scrolling="no" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0">
 </iframe>
    <br>

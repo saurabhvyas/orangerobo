@@ -39,6 +39,9 @@ rpio.open(10, rpio.OUTPUT, rpio.LOW);  // motor b pin 2
 
 app.use(cors());
 
+var counter = 0 ;
+
+
 io.on('connection', function(client){
   client.on('test', function(data){
 	
