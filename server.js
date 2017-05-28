@@ -5,7 +5,8 @@ var app = express(),cors = require('cors');
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var url = require('url');
-
+var cmd=require('node-cmd');
+var multer  = require('multer')
 
 var rpio = require('rpio');
 var morgan = require('morgan');
@@ -16,6 +17,18 @@ app.use(express.static(__dirname + '/node_modules'));
 app.use(bodyParser.json());
 
 
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, 'audio.wav')
+  }
+})
+
+
+var upload = multer({ storage: storage  })
 
 
 rpio.init({mapping: 'gpio'});
@@ -33,7 +46,32 @@ rpio.open(13, rpio.OUTPUT, rpio.LOW); // pwm b
 rpio.open(9, rpio.OUTPUT, rpio.LOW); // motor b pin 1
 rpio.open(10, rpio.OUTPUT, rpio.LOW);  // motor b pin 2
 
+var active_clients = 0;
 
+setInterval(function(){
+
+
+
+if (active_clients === 0 ) {
+console.log('no active clients');
+
+		 	 cmd.get(
+        `cd /home/pi/rpicam  && ./stop.sh`,
+        function(err, data, stderr){
+           // console.log('results',data);
+            // console.log('err' + err);
+             
+        }
+    );
+    
+    		 	
+  	
+  //	cmd.run('cd rpicam');
+  //	cmd.run('./stop.sh');
+  	
+}
+
+} ,5000)
 
 
 
@@ -44,7 +82,35 @@ var counter_b=0;
 var counter_l=0;
 var counter_r=0;
 
+
+
+
+
 io.on('connection', function(client){
+	
+	active_clients=active_clients + 1;
+	console.log(' active_clients : ' + active_clients);
+	
+	if ( active_clients === 1 ) {
+	
+	//md.run('cd rpicam');
+	//md.run('./start.sh');
+	 
+		 	 cmd.get(
+        'cd /home/pi/rpicam  && ./start.sh',
+        function(err, data, stderr){
+           // console.log('results',data);
+           //  console.log('err' + err);
+             
+        }
+    );
+    
+    
+ 
+	
+	}
+	
+	
   client.on('test', function(data){
 	
 	console.log(data)
@@ -133,7 +199,20 @@ break;
 	
 	  
   });
-  client.on('disconnect', function(){});
+  client.on('disconnect', function(){
+  	
+  	active_clients = active_clients - 1 ;
+
+  	
+	  
+  });
+});
+
+app.post('/speech' ,upload.any() , function(req,res) {
+res.send('post received at /speech ');
+
+
+
 });
 
 
