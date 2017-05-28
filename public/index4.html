@@ -1,0 +1,600 @@
+
+<!DOCTYPE html>
+
+<head>
+
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+crossorigin="anonymous"  ></script>
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="https://cdn.webrtc-experiment.com/MediaStreamRecorder.js"> </script>
+  <script src="https://cdn.WebRTC-Experiment.com/gumadapter.js"></script>
+
+
+
+<script>
+
+//var socket = io('https://saurabhorange.duckdns.org/robot/');
+var socket = io('/');
+//var sock = new SockJS('http://localhost/echo');
+
+
+ 
+ var f = jQuery.Event("keydown", { keyCode: 38 , which: 38 });
+var b = jQuery.Event("keydown", { keyCode: 40 , which: 40 });
+var l = jQuery.Event("keydown", { keyCode: 37 , which: 37});
+var r = jQuery.Event("keydown", { keyCode: 39 , which: 39});
+
+function captureUserMedia(mediaConstraints, successCallback, errorCallback) {
+                navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
+            }
+
+var mediaConstraints = {
+    audio: true
+};
+
+function start() {
+
+  captureUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
+window.setTimeout(stop , 4000);
+}
+
+// navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
+var mediaRecorder;
+
+function start() {
+
+  captureUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
+window.setTimeout(stop , 4000);
+}
+
+// navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
+var mediaRecorder;
+
+
+ function onMediaSuccess(stream) {
+
+var audio = document.createElement('audio');
+
+	  audio = mergeProps(audio, {
+                    controls: true,
+                    muted: true,
+                    src: URL.createObjectURL(stream)
+                });
+                audio.play();
+
+     mediaRecorder = new MediaStreamRecorder(stream);
+     mediaRecorder.stream = stream;
+
+  mediaRecorder.recorderType = StereoAudioRecorder;
+   mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
+    mediaRecorder.audioChannels = 1;
+//mediaRecorder.sampleRate = 16000;
+
+    mediaRecorder.ondataavailable = function (blob) {
+
+           
+	var fileType = 'audio'; // or "audio"
+var fileName = 'test.wav';  // or "wav" or "ogg"
+
+var formData = new FormData();
+formData.append(fileType + '-filename', fileName);
+formData.append(fileType + '-blob', blob);
+
+
+
+xhr('/speech', formData, function (fileURL) {
+    window.open(fileURL);
+});
+
+function xhr(url, data, callback) {
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (request.readyState == 4 && request.status == 200) {
+            callback(location.href + request.responseText);
+        }
+    };
+    request.open('POST', url);
+    request.send(data);
+}
+
+
+        // POST/PUT "Blob" using FormData/XHR2
+      //  var blobURL = URL.createObjectURL(blob);
+       // document.write('<a href="' + blobURL + '">' + blobURL + '</a>');
+    };
+    mediaRecorder.start(5000);
+}
+
+
+//var func =onMediaSuccess;
+
+function onMediaError(e) {
+    console.error('media error', e);
+}
+
+
+function stop() {
+mediaRecorder.stop();
+mediaRecorder.stream.stop();
+console.log('stopped');
+}
+
+function resume() {
+mediaRecorder.resume();
+console.log('resuming');
+
+}
+
+function save() {
+mediaRecorder.save();
+console.log('saving ');
+
+}
+
+
+function pause() {
+mediaRecorder.pause();
+console.log('pausing');
+
+}
+
+
+
+
+
+
+function post() {
+
+//mediaRecorder.save(blob, 'test,wav');
+
+var fileType = 'audio'; // or "audio"
+var fileName = 'ABCDEF.wav';  // or "wav" or "ogg"
+
+var formData = new FormData();
+formData.append(fileType + '-filename', fileName);
+formData.append(fileType + '-blob', blob);
+
+xhr('/speech', formData, function (fileURL) {
+    window.open(fileURL);
+});
+
+function xhr(url, data, callback) {
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (request.readyState == 4 && request.status == 200) {
+            callback(location.href + request.responseText);
+        }
+    };
+    request.open('POST', url);
+    request.send(data);
+}
+}
+
+
+
+
+$( document ).ready(function() {
+
+  /*
+var el = document.getElementById("red");
+  el.addEventListener("touchstart", redHandler(), false);
+  el.addEventListener("touchend", blueHandler(), false);
+  
+  
+  */
+  
+  
+  $('#red').on({ 'touchstart' : function(){ redHandler();  } });
+  $('#red').on({ 'touchend' : function(){ blueHandler();  } });
+  
+  $('#green').on({ 'touchstart' : function(){ greenHandler();  } });
+  $('#green').on({ 'touchend' : function(){ blueHandler();  } });
+  
+  $('#left').on({ 'touchstart' : function(){ leftHandler();  } });
+  $('#left').on({ 'touchend' : function(){ blueHandler();  } });
+  
+  $('#right').on({ 'touchstart' : function(){ rightHandler();  } });
+  $('#right').on({ 'touchend' : function(){ blueHandler();  } });
+  
+  /*
+   var el2 = document.getElementById("green");
+  el2.addEventListener("touchstart", greenHandler(), false);
+  el2.addEventListener("touchend", blueHandler(), false);
+  
+   var el3 = document.getElementById("left");
+  el3.addEventListener("touchstart", leftHandler(), false);
+  el3.addEventListener("touchend", blueHandler(), false);
+
+
+*/
+});
+  socket.on('connect', function(){
+console.log('connected');
+	
+	
+
+  
+  });
+  
+ 
+  
+  socket.on('event', function(data){});
+  socket.on('disconnect', function(){});
+
+
+var current_key = 'h';
+
+	$(document).keydown(function(e)  {
+	
+	
+	//var socket_test = socket;
+//	console.log(socket_test);
+
+	
+	//console.log('key press');
+    switch(e.which) {
+    
+         
+	
+    
+        case 37: // left
+        
+       
+   
+//console.log('wtf');
+
+//	console.log('current_key is' + current_key);
+	
+       
+       if (current_key === 'l' ) {
+       
+      //  console.log('left');
+       
+       }
+       
+       else {
+       
+       console.log('left');
+       
+        socket.emit("test","l");
+       
+       
+   current_key = 'l' ;
+   
+       
+       }
+
+        break;
+
+        case 38: // up
+   //     redHandler();
+  // socket.emit("test","f");
+
+	if (current_key === 'f' ) {
+       
+      //  console.log('left');
+       
+       }
+       
+       else {
+       
+       console.log('forward');
+       
+        socket.emit("test","f");
+       
+       
+   current_key = 'f' ;
+   
+       
+       }
+
+
+//console.log('f');
+
+        break;
+
+        case 39: // right
+//        rightHandler();
+
+//socket.emit("test","r");
+
+	if (current_key === 'r' ) {
+       
+      //  console.log('left');
+       
+       }
+       
+       else {
+       
+       console.log('right');
+       
+        socket.emit("test","r");
+       
+       
+   current_key = 'r' ;
+   
+       
+       }
+
+
+        break;
+
+         case 40: // down
+ 	// greenHandler();
+ 	
+ 	//socket.emit("test","b");
+ 	
+ 	if (current_key === 'b' ) {
+       
+      //  console.log('left');
+       
+       }
+       
+       else {
+       
+       console.log('back');
+       
+        socket.emit("test","b");
+       
+       
+   current_key = 'b' ;
+   
+       
+       }
+
+//console.log('back');
+
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
+
+
+$(document).keyup(function(e) {
+    switch(e.which) {
+        case 37: // left
+     //   blueHandler();
+     
+     socket.emit("test","s");
+     current_key="s";
+     
+
+
+        break;
+
+        case 38: // up
+    //    blueHandler();
+    socket.emit("test","s");
+    current_key="s";
+     
+
+        break;
+
+        case 39: // right
+//         blueHandler();
+
+socket.emit("test","s");
+current_key="s";
+     
+
+
+        break;
+
+         case 40: // down
+ 	// blueHandler();
+ 	
+ 	socket.emit("test","s");
+ 	current_key="s";
+     
+
+
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
+
+
+
+test = function() {
+
+// console.log(' mouse hold event ');
+ } 
+
+
+
+ rightHandler = function() {
+
+
+jQuery("body").trigger( r );
+
+} 
+
+ leftHandler = function() {
+ 
+
+jQuery("body").trigger( l );
+
+ 
+
+} 
+
+ redHandler = function() {
+ 
+ console.log('test');
+ 
+
+
+jQuery("body").trigger( f );
+
+} 
+
+ greenHandler = function() {
+jQuery("body").trigger( b );
+ 
+}
+
+ 
+
+ blueHandler = function() {
+ 
+  var s = jQuery.Event("keyup", { keyCode: 37 , which:37 });
+
+ 
+jQuery("body").trigger( s )
+
+} 
+
+</script>
+
+<style>
+
+    body,htm,title {
+        padding,margin : 0;
+        border:0;
+
+    }
+
+#red {
+left:0%;
+
+    width:30%;
+    display:inline-block;
+   
+    height:70px;
+    background:red;
+    color:white;
+    margin:0;
+
+
+
+}
+
+#left {
+left:0%;
+
+    width:30%;
+    display:inline-block;
+   
+    height:70px;
+    background:pink;
+    color:white;
+    margin:0;
+
+
+
+}
+
+#right {
+left:0%;
+
+    width:30%;
+    display:inline-block;
+   
+    height:70px;
+    background:orange;
+    color:white;
+    margin:0;
+
+
+
+}
+
+
+#green {
+    left:33%;
+
+    width:30%;
+    display:inline-block;
+   
+    height:70px;
+    background:green;
+    color:white;
+  margin:0;
+}
+
+
+#blue {
+   left:66%;
+
+    width:30%;
+    display:inline-block;
+    
+    height:70px;
+    background:blue;
+    color:white;
+margin:0;
+}
+
+h1{
+    font-size:4em;
+    text-align:center;
+
+}
+
+input {
+    width:100%;
+    background-color:inherit;
+    color:white;
+    font-size:20px;
+
+
+    height:100%;
+}
+
+</style>
+
+<script src="https://use.fontawesome.com/4787d3a61b.js"></script>
+
+</head>
+<body>
+
+<h1> Orange Robot Beta </h1>
+   
+<iframe src="https://www.saurabhorange.duckdns.org/robotlamp/min.php" style="width: 96%; height: 300px"
+scrolling="no" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0">
+</iframe>
+   <br>
+ 
+    <div id="red" onmousedown="redHandler()" onmouseup="blueHandler()">
+    <input  type="button"  onclick="" value=" Forward "  /> 
+	
+    </div>
+
+      <div id="green">
+      <input type="button"   onmousedown="greenHandler()" onmouseup="blueHandler()" value="Backward" > 
+      </div>
+      <div id="blue">
+   <input type="button"    onclick="blueHandler()" value="Stop"> 
+</div>
+
+ <div id="left">
+    <input  type="button"  onmousedown="leftHandler()" onmouseup="blueHandler()"  value="Left"> 
+
+    </div>
+
+  <div id="right">
+    <input  type="button"  onmousedown="rightHandler()" onmouseup="blueHandler()"   value="Right"> 
+
+    </div>
+    
+    <button id="start" onClick="start()"> Start Recording </button >
+    
+    
+</body>
+
+
+
+
+</html>
+
