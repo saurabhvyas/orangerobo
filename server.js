@@ -23,7 +23,7 @@ var storage = multer.diskStorage({
     cb(null, 'uploads/')
   },
   filename: function (req, file, cb) {
-    cb(null, 'audio.wav')
+    cb(null, 'voice' + Date.now() );
   }
 })
 
@@ -48,9 +48,64 @@ rpio.open(10, rpio.OUTPUT, rpio.LOW);  // motor b pin 2
 
 var active_clients = 0;
 
+
+//cmd.run('amixer cset numid=1 10%');
+
+playAudio = function() {
+
+//var cmdstring = 'echo -e  "connect 30:21:BC:8D:48:6B \nquit" | bluetoothctl ' ;
+
+//cmdstring = cmdstring.replace(/[\\$'"]/g, "\\$&");
+//console.log(cmdstring);
+
+
+//cmd.run('amixer cset numid=1 60%');   // make sure sound is low so ears dont explode
+//cmd.get('pulseaudio --start',function(err,data,std){
+
+//console.log('err' + err );
+//console.log('data ' + data);
+//console.log('std' + std);
+
+  // this is required before bluetoothctl for some weird reason 
+/*cmd.get(cmdstring,function(err,data,stderr){
+
+console.log('error2' + err);
+console.log('data2' + data);
+console.log('stderr2'  + stderr);
+
+
+}); // assuming device is already paired and trusted
+
+*/
+const exec = require('child_process').exec;
+const testscript = exec('sh bluetooth_connect.sh');
+
+testscript.stdout.on('data', function(data){
+    console.log('data' + data); 
+  //  cmd.run('pacmd "set-default-sink bluez_sink.30_21_BC_8D_48_6B" ');
+   // cmd.run('aplay /home/pi/saurabh/robot/uploads/audio.wav');
+    // sendBackInfo();
+});
+
+testscript.stderr.on('data', function(data){
+    console.log('errdata' + data);
+    // triggerErrorStuff(); 
+});
+
+
+
+
+
+
+}
+
+playAudio();
+
+
 setInterval(function(){
 
 
+rpio.write(20, rpio.LOW);
 
 if (active_clients === 0 ) {
 console.log('no active clients');
@@ -71,7 +126,7 @@ console.log('no active clients');
   	
 }
 
-} ,5000)
+} ,10000)
 
 
 
