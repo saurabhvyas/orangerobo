@@ -9,3 +9,5 @@ To do :
 
 Add safety lock out on server.js
 
+ 
+![alt text](https://raw.githubusercontent.com/saurabhvyas/orangerobo/master/IMG_20170526_235642081.jpg )
