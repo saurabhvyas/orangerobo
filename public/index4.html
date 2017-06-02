@@ -37,19 +37,15 @@ var mediaConstraints = {
     audio: true
 };
 
-function start() {
 
-  captureUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
-window.setTimeout(stop , 4000);
-}
 
 // navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
-var mediaRecorder;
+
 
 function start() {
 
   captureUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
-window.setTimeout(stop , 4000);
+window.setTimeout(stop , 10000);
 }
 
 // navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
@@ -87,7 +83,7 @@ formData.append(fileType + '-blob', blob);
 
 
 
-xhr('/speech', formData, function (fileURL) {
+xhr('/', formData, function (fileURL) {
     window.open(fileURL);
 });
 
@@ -98,7 +94,7 @@ function xhr(url, data, callback) {
             callback(location.href + request.responseText);
         }
     };
-    request.open('POST', url);
+    request.open('POST', '/robot');
     request.send(data);
 }
 
@@ -107,7 +103,7 @@ function xhr(url, data, callback) {
       //  var blobURL = URL.createObjectURL(blob);
        // document.write('<a href="' + blobURL + '">' + blobURL + '</a>');
     };
-    mediaRecorder.start(5000);
+    mediaRecorder.start(10000);
 }
 
 
@@ -144,7 +140,7 @@ console.log('pausing');
 }
 
 
-
+/*
 
 
 
@@ -159,7 +155,7 @@ var formData = new FormData();
 formData.append(fileType + '-filename', fileName);
 formData.append(fileType + '-blob', blob);
 
-xhr('/speech', formData, function (fileURL) {
+xhr('', formData, function (fileURL) {
     window.open(fileURL);
 });
 
@@ -170,12 +166,14 @@ function xhr(url, data, callback) {
             callback(location.href + request.responseText);
         }
     };
-    request.open('POST', url);
+    request.open('POST', '');
     request.send(data);
 }
 }
 
 
+
+*/
 
 
 $( document ).ready(function() {

@@ -23,12 +23,32 @@ var storage = multer.diskStorage({
     cb(null, 'uploads/')
   },
   filename: function (req, file, cb) {
-    cb(null, 'voice' + Date.now() );
+    cb(null, 'audio.wav' );
   }
 })
 
 
+
+app.get('/',function(req,res) { 
+
+res.send(' Hello from pi3 - 2');
+
+
+});
 var upload = multer({ storage: storage  })
+
+app.post('/' ,upload.any() , function(req,res) {
+//res.send('post received at /speech ');
+
+console.log('post received');
+
+res.send('coool');
+
+playAudio();
+
+
+});
+
 
 
 rpio.init({mapping: 'gpio'});
@@ -99,7 +119,7 @@ testscript.stderr.on('data', function(data){
 
 }
 
-playAudio();
+//playAudio();
 
 
 setInterval(function(){
@@ -263,12 +283,6 @@ break;
   });
 });
 
-app.post('/speech' ,upload.any() , function(req,res) {
-res.send('post received at /speech ');
-
-
-
-});
 
 
 server.listen(5000,function () {
